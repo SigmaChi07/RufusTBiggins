@@ -1,0 +1,96 @@
+#include <cs50.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+
+// add prototypes
+int count_letters(string text);
+int count_words(string text);
+int count_sentences(string text);
+
+// add constants
+const double A = 0.0588;
+const double B = 0.296;
+const double C = 15.8;
+const int D = 100;
+
+int main(void)
+{
+    // Prompt user for some text
+    string text = get_string("Enter some text to read: ");
+
+    // Initialize counting of letters, words, and sentences in given text
+    int letters = count_letters(text);
+    int words = count_words(text);
+    int sentences = count_sentences(text);
+
+    // Identify Letters, sentences, and words.
+    float L = (float) letters / words * D;
+    float S = (float) sentences / words * D;
+
+    // Calculate the readability grade level with the Coleman-Liau Index formula
+    float index = A * L - B * S - C;
+    int grade_level = (int) round(index);
+
+    // Print the reading grade level
+    if (grade_level < 1)
+    {
+        printf("Before Grade 1\n");
+    }
+    else if (grade_level >= 16)
+    {
+        printf("Grade 16+\n");
+    }
+    else
+    {
+        printf("Grade %i\n", grade_level);
+    }
+
+    return 0;
+}
+
+// Count the number of letters in text
+int count_letters(string text)
+{
+    int letters = 0;
+    for (int i = 0; text[i] != '\0'; i++)
+    {
+        // if to check if a letter is an actual letter
+        if (isalpha(text[i]))
+        {
+            letters++;
+        }
+    }
+    return letters;
+}
+// Count the number of words in text
+int count_words(string text)
+{
+    int words = 0;
+    for (int i = 0; text[i] != '\0'; i++)
+    {
+        // if to check if there is a space between the words
+        if (isspace(text[i]))
+        {
+            words++;
+        }
+    }
+    return words + 1;
+}
+
+// Count the number of sentences in text
+int count_sentences(string text)
+{
+    int sentences = 0;
+    int length = strlen(text);
+    for (int i = 0; i < length; i++)
+    {
+        // if to check for punctuation inside of the array
+        if (text[i] == '.' || text[i] == '!' || text[i] == '?')
+        {
+            sentences++;
+        }
+    }
+    return sentences;
+}
